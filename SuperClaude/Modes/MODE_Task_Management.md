@@ -42,58 +42,6 @@
 4. Generate prompt template if --task-manage flag active
 ```
 
-## Prompt Template Generation (--task-manage Enhancement)
-
-When `--task-manage` flag is used, automatically generate reusable prompt templates:
-
-### Template Location
-- **File Path**: `docs/todos/{task-name}-prompt-template.md`
-- **Max Length**: 300 lines
-- **Format**: Structured markdown following best practice prompt engineering
-
-### Template Structure
-```markdown
-# {Task Name} - Implementation Template
-
-## Technical Requirements
-- [Extracted from discussion and analysis]
-- [Architecture constraints and dependencies]
-- [Performance and quality requirements]
-
-## Implementation Steps
-1. [Phase 1: Analysis and Planning]
-   - Specific deliverables and validation criteria
-2. [Phase 2: Core Implementation]
-   - Code generation patterns and validation
-3. [Phase 3: Testing and Documentation]
-   - Test coverage requirements and docs
-
-## Validation Criteria
-- [ ] Technical requirements met and verified
-- [ ] Code quality standards maintained
-- [ ] Testing coverage > 80%
-- [ ] Documentation updated
-- [ ] Performance benchmarks satisfied
-
-## Context Variables
-- Project Type: {detected from analysis}
-- Tech Stack: {framework/libraries identified}
-- Architecture Pattern: {architectural decisions}
-- Key Dependencies: {critical imports/packages}
-
-## Reuse Instructions
-This template can be reused for similar {task-type} implementations by:
-1. Updating context variables for new project
-2. Modifying technical requirements as needed
-3. Adapting validation criteria to project standards
-```
-
-### Auto-Generation Triggers
-- Task completion with `--task-manage` flag
-- Discussion sessions that result in structured implementation plans
-- Multi-phase development workflows
-- Feature development with reusable patterns
-
 ## Execution Pattern
 
 1. **Load**: list_memories() → read_memory() → Resume state
