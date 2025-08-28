@@ -80,13 +80,22 @@ class CoreComponent(Component):
             if not self.file_manager.ensure_directory(dir_path):
                 self.logger.warning(f"Could not create directory: {dir_path}")
         
-        # Update CLAUDE.md with core framework imports
+        # Update CLAUDE.md with core framework imports and strict implementation rules
         try:
             manager = CLAUDEMdService(self.install_dir)
+            
+            # Add core framework imports
             manager.add_imports(self.component_files, category="Core Framework")
             self.logger.info("Updated CLAUDE.md with core framework imports")
+            
+            # Add strict implementation rules for "Build ONLY What's Asked"
+            if manager.add_strict_implementation_rules():
+                self.logger.info("Added strict implementation rules to CLAUDE.md")
+            else:
+                self.logger.warning("Failed to add strict implementation rules to CLAUDE.md")
+                
         except Exception as e:
-            self.logger.warning(f"Failed to update CLAUDE.md with core framework imports: {e}")
+            self.logger.warning(f"Failed to update CLAUDE.md: {e}")
             # Don't fail the whole installation for this
 
         return True

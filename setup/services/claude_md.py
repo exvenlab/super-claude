@@ -258,6 +258,79 @@ The SuperClaude framework components will be automatically imported below.
         except Exception as e:
             self.logger.error(f"Failed to create CLAUDE.md: {e}")
             raise
+
+    def add_strict_implementation_rules(self) -> bool:
+        """
+        Add "Build ONLY What's Asked" rules to CLAUDE.md if not already present
+        
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            # Read template file - search multiple possible locations
+            possible_paths = [
+                self.install_dir.parent / "setup" / "data" / "claude_strict_implementation_rules.md",
+                Path(__file__).parent.parent / "data" / "claude_strict_implementation_rules.md",
+                self.install_dir / "setup" / "data" / "claude_strict_implementation_rules.md"
+            ]
+            
+            template_path = None
+            for path in possible_paths:
+                if path.exists():
+                    template_path = path
+                    break
+            
+            if not template_path:
+                self.logger.warning(f"Template file not found in any of: {[str(p) for p in possible_paths]}")
+                return False
+            
+            with open(template_path, 'r', encoding='utf-8') as f:
+                strict_rules_content = f.read()
+            
+            # Ensure CLAUDE.md exists
+            self.ensure_claude_md_exists()
+            
+            # Read existing content
+            existing_content = self.read_existing_content()
+            
+            # Check if strict implementation rules already exist
+            if "🛑 MANDATORY BEFORE ANY IMPLEMENTATION" in existing_content:
+                self.logger.info("Strict implementation rules already present in CLAUDE.md")
+                return True
+            
+            # Extract user content and framework imports
+            user_content = self.extract_user_content(existing_content)
+            existing_framework_imports = self._parse_existing_framework_imports(existing_content)
+            
+            # Build new content with strict rules inserted
+            new_content_parts = []
+            
+            # Add user content first
+            if user_content.strip():
+                new_content_parts.append(user_content)
+                new_content_parts.append("")
+            
+            # Add strict implementation rules
+            new_content_parts.append(strict_rules_content)
+            new_content_parts.append("")
+            
+            # Add framework imports section
+            framework_section = self.organize_imports_by_category(existing_framework_imports)
+            if framework_section:
+                new_content_parts.append(framework_section)
+            
+            # Write updated content
+            new_content = "\n".join(new_content_parts)
+            
+            with open(self.claude_md_path, 'w', encoding='utf-8') as f:
+                f.write(new_content)
+            
+            self.logger.success("Added strict implementation rules to CLAUDE.md")
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Failed to add strict implementation rules: {e}")
+            return False
     
     def remove_imports(self, files: List[str]) -> bool:
         """
