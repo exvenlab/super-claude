@@ -85,6 +85,21 @@ Actionable rules for enhanced Claude Code framework operation.
 ✅ **Right**: `getUserData()`, `user_data.py`, `components/auth/`  
 ❌ **Wrong**: `get_userData()`, `userdata.py`, `files/everything/`
 
+## Dependency Validation
+**Priority**: 🔴 **Triggers**: Code generation, function references, cross-folder imports
+
+- **Pre-Generation Analysis**: Always scan project dependencies before generating code that references other modules
+- **Function/Class Existence**: Verify that referenced functions, classes, or components exist in target folders before generating imports
+- **Dependency Chain Validation**: Check that referenced modules don't create circular dependencies
+- **Package Availability**: Confirm required packages exist in package.json/pubspec.yaml/requirements.txt before suggesting imports
+- **Path Resolution**: Validate that import paths are correct relative to the file being generated
+- **Missing Dependency Handling**: When dependencies don't exist, either create them first or clearly indicate what needs to be created
+- **Cross-Feature Boundaries**: Extra validation when referencing code across feature folders to prevent tight coupling
+
+✅ **Right**: Check if `AuthService` exists in `lib/services/` before generating `import '../services/auth_service.dart'`  
+❌ **Wrong**: Generate import statements without verifying target files exist  
+**Detection**: `grep -r "import.*/" generated_files/` → verify all targets exist
+
 ## Workspace Hygiene
 **Priority**: 🟡 **Triggers**: After operations, session end, temporary file creation
 
@@ -165,7 +180,11 @@ Actionable rules for enhanced Claude Code framework operation.
 **Priority**: 🟡 **Triggers**: File creation, project structuring, documentation
 
 - **Think Before Write**: Always consider WHERE to place files before creating them
-- **Claude-Specific Documentation**: Put reports, analyses, summaries in `claudedocs/` directory
+- **Framework Documentation**: 
+  - Task management templates: `docs/todos/{task-name}-phase-*.md`
+  - Project documentation: `docs/projects/{type}-{target}.md`
+  - Index files: `{context}/index-file.md` (context-relative)
+  - Changelog: `CHANGELOG.md` in project root
 - **Test Organization**: Place all tests in `tests/`, `__tests__/`, or `test/` directories
 - **Script Organization**: Place utility scripts in `scripts/`, `tools/`, or `bin/` directories
 - **Check Existing Patterns**: Look for existing test/script directories before creating new ones
@@ -173,9 +192,10 @@ Actionable rules for enhanced Claude Code framework operation.
 - **No Random Scripts**: Never create debug.sh, script.py, utility.js in random locations
 - **Separation of Concerns**: Keep tests, scripts, docs, and source code properly separated
 - **Purpose-Based Organization**: Organize files by their intended function and audience
+- **Context-Aware Placement**: Index files go in their referenced context, not central location
 
-✅ **Right**: `tests/auth.test.js`, `scripts/deploy.sh`, `claudedocs/analysis.md`  
-❌ **Wrong**: `auth.test.js` next to `auth.js`, `debug.sh` in project root
+✅ **Right**: `docs/todos/feature-auth-prompt-template.md`, `shared/index-file.md`, `CHANGELOG.md` in root  
+❌ **Wrong**: `auth-template.md` in random location, `index.md` in wrong context, changelog in docs/
 
 ## Safety Rules
 **Priority**: 🔴 **Triggers**: File operations, library usage, codebase changes

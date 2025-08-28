@@ -17,7 +17,7 @@ personas: []
 
 ## Usage
 ```
-/sc:save [--type session|learnings|context|all] [--summarize] [--checkpoint]
+/sc:save [context_name] [--type session|learnings|context|all] [--summarize] [--checkpoint] [--merge]
 ```
 
 ## Behavioral Flow
@@ -91,3 +91,85 @@ Key behaviors:
 - Operate without proper Serena MCP integration and memory access
 - Save session data without validation and integrity verification
 - Override existing session context without proper checkpoint preservation
+
+## Memory Collision Prevention
+
+### Issue Resolution
+Previous behavior created new memory files for duplicate context names instead of updating existing ones. This caused memory fragmentation and loss of session continuity.
+
+### Enhanced Behavior (--merge flag)
+When `--merge` flag is used or same context name is detected:
+
+#### Memory Collision Detection
+```
+1. Check existing memories with list_memories()
+2. If context_name already exists, prompt for merge strategy:
+   - "merge": Combine new content with existing memory
+   - "overwrite": Replace existing memory completely  
+   - "version": Create versioned memory (context_name_v2, context_name_v3)
+   - "cancel": Abort save operation
+```
+
+#### Merge Strategy Implementation
+```markdown
+## Merge Process
+1. **Content Analysis**: Compare new content with existing memory
+2. **Conflict Detection**: Identify overlapping or contradictory information
+3. **Intelligent Merge**: 
+   - Append new discoveries to existing context
+   - Update outdated information
+   - Preserve historical context when relevant
+4. **Validation**: Ensure merged content maintains coherence
+```
+
+#### Default Behavior (without --merge)
+- **First Save**: `/sc:save "project context"` → Creates new memory
+- **Subsequent Saves**: `/sc:save "project context"` → Automatically prompts for merge strategy
+- **Auto-merge**: If content is purely additive (no conflicts), merge automatically
+- **Conflict Prompt**: If conflicts detected, require user choice
+
+### Enhanced Examples
+
+#### Memory Update with Merge
+```
+/sc:save "enhance redesign" --merge
+# Checks for existing "enhance redesign" memory
+# Merges new discoveries with existing context
+# Maintains session continuity across work phases
+```
+
+#### Versioned Memory Management
+```
+/sc:save "project analysis" --type learnings
+# First save: creates "project analysis" memory
+# Second save: automatically merges new learnings
+# Conflict resolution: prompts for strategy choice
+```
+
+#### Structured Session Management
+```
+/sc:save "flutter app development" --checkpoint --merge
+# Creates/updates comprehensive session context
+# Includes progress tracking and discovery accumulation
+# Enables seamless session restoration
+```
+
+### Implementation Rules
+
+#### Memory Naming Convention
+- **Context Names**: Use descriptive, consistent naming across sessions
+- **Avoid Duplicates**: System warns when similar context names exist
+- **Merge Validation**: Ensure merged content maintains logical flow
+- **Version Control**: Track content changes for rollback capability
+
+#### Conflict Resolution Priority
+1. **User Explicit Choice**: Always honor user-specified merge strategy
+2. **Additive Content**: Auto-merge when new content complements existing
+3. **Contradictory Content**: Always prompt for resolution strategy
+4. **Session Continuity**: Prioritize maintaining coherent project context
+
+#### Quality Assurance
+- **Content Validation**: Verify merged memories maintain coherence
+- **Cross-Reference Check**: Ensure consistency with other project memories
+- **Size Management**: Prevent memory bloat through intelligent summarization
+- **Recovery Points**: Maintain backup of previous memory states for rollback

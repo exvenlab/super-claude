@@ -14,10 +14,12 @@ personas: []
 - API documentation and reference material generation needs
 - Code comment and inline documentation requirements
 - User guide and technical documentation creation requests
+- File organization and indexing needs (--indexer flag)
+- Changelog management and version documentation (--changelog flag)
 
 ## Usage
 ```
-/sc:document [target] [--type inline|external|api|guide] [--style brief|detailed]
+/sc:document [target] [--type inline|external|api|guide] [--style brief|detailed] [--indexer] [--changelog]
 ```
 
 ## Behavioral Flow
@@ -86,3 +88,125 @@ Key behaviors:
 - Generate documentation without proper code analysis and context understanding
 - Override existing documentation standards or project-specific conventions
 - Create documentation that exposes sensitive implementation details
+
+## Enhanced Functionality
+
+### File Indexing (--indexer flag)
+When used with `--indexer`, generates context-aware file indices:
+
+#### Index File Location Pattern
+```
+/sc:document shared --indexer → creates: shared/index-file.md
+/sc:document lib/features/auth --indexer → creates: lib/features/auth/index-file.md  
+/sc:document . --indexer → creates: index-file.md (project root)
+```
+
+#### Index File Structure
+```markdown
+# {Context} - File Index
+
+Generated: {timestamp}
+Context: {path}
+Files: {count}
+
+| File | Description | Type | Link |
+|------|-------------|------|------|
+| file.dart | One-line description | Dart | [📁](./file.dart) |
+| config.json | Configuration file | JSON | [📁](./config.json) |
+
+## Directory Structure
+### folder/
+Purpose and contents overview
+
+**Files:**
+- `file1.ext` - Description
+- `file2.ext` - Description
+```
+
+#### Indexer Features
+- **Comprehensive Scanning**: All files and subdirectories in specified context
+- **Smart Descriptions**: Auto-generated based on file patterns, names, and content analysis
+- **Working Links**: Relative links that work from index file location
+- **Type Detection**: Automatic categorization by extension and content
+- **Hierarchy Preservation**: Maintains folder structure in documentation
+
+### Changelog Management (--changelog flag)
+When used with `--changelog`, manages CHANGELOG.md in project root:
+
+#### Changelog Format (Keep a Changelog Standard)
+```markdown
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [Unreleased]
+
+## [1.0.1] - 2024-01-15
+### Added
+- New feature descriptions
+
+### Changed  
+- Modified functionality details
+
+### Fixed
+- Bug fixes and corrections
+
+### Removed
+- Deprecated feature removals
+```
+
+#### Changelog Features
+- **Version Detection**: Auto-detect from package.json, pubspec.yaml, or manual input
+- **Structured Entries**: Categorized changes (Added, Changed, Fixed, Removed)
+- **Date Management**: Automatic date formatting and version timestamps
+- **Upsert Logic**: Updates existing entries or creates new sections as needed
+
+## Extended Examples
+
+### File Indexing Examples
+```
+/sc:document src/components --indexer
+# Creates: src/components/index-file.md
+# Scans all .jsx/.tsx files with component descriptions
+
+/sc:document docs --indexer
+# Creates: docs/index-file.md  
+# Organizes all documentation files with descriptions
+```
+
+### Changelog Examples
+```
+/sc:document . --changelog
+# Updates CHANGELOG.md in project root
+# Prompts for version and change descriptions
+
+/sc:document --changelog --version 1.2.0 --changes "Added Flutter support, Fixed memory leaks"
+# Direct changelog entry with specified version and changes
+```
+
+### Combined Operations
+```
+/sc:document lib --indexer --type api
+# Creates both:
+# - lib/index-file.md (file index)
+# - docs/projects/lib-api-documentation.md (API docs)
+
+/sc:document . --changelog --indexer --type architecture
+# Creates:
+# - index-file.md (project file index)
+# - CHANGELOG.md update
+# - docs/projects/architecture.md
+```
+
+## File Organization Rules
+
+### Generated File Locations
+- **Index Files**: `{context}/index-file.md` (relative to specified context)
+- **Documentation**: `docs/projects/{target}-{type}.md` for external docs  
+- **Changelog**: `CHANGELOG.md` in project root
+- **API Docs**: `docs/api/` directory for comprehensive API documentation
+
+### Integration with Task Management
+- **TodoWrite**: Automatically created for complex documentation projects
+- **Memory Management**: Store documentation patterns for reuse
+- **Progress Tracking**: Monitor completion of multi-file documentation tasks

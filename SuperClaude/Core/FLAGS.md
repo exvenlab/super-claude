@@ -14,7 +14,7 @@ Behavioral flags for Claude Code to enable specific execution modes and tool sel
 
 **--task-manage**
 - Trigger: Multi-step operations (>3 steps), complex scope (>2 directories OR >3 files)
-- Behavior: Orchestrate through delegation, progressive enhancement, systematic organization
+- Behavior: Orchestrate through delegation, progressive enhancement, systematic organization, generate prompt templates in docs/todos/
 
 **--orchestrate**
 - Trigger: Multi-tool operations, performance constraints, parallel execution opportunities
@@ -111,6 +111,20 @@ Behavioral flags for Claude Code to enable specific execution modes and tool sel
 **--focus [performance|security|quality|architecture|accessibility|testing]**
 - Trigger: Domain-specific optimization needs
 - Behavior: Target specific analysis domain and expertise application
+
+## Documentation & Utility Flags
+
+**--indexer**
+- Trigger: File organization needs, project documentation requests
+- Behavior: Generate context-aware index files based on /sc:document [context] --indexer pattern, creates {context}/index-file.md with file listings, descriptions, and links
+
+**--changelog**
+- Trigger: Version control documentation, release preparation
+- Behavior: Upsert CHANGELOG.md in project root following Keep a Changelog format, structured entries with version, date, and categorized changes
+
+**--flutter-expert**
+- Trigger: Flutter/Dart development, mobile app projects, Riverpod state management
+- Behavior: Activate comprehensive Flutter development specialist with modern architecture patterns and dependency validation
 
 ## Flag Priority Rules
 
