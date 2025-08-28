@@ -150,6 +150,37 @@
 | `--type` | Test type | `unit`, `integration`, `e2e` |
 | `--watch` | Watch mode | Boolean |
 
+### Document Command Flags (`/sc:document`)
+| Flag | Purpose | Values |
+|------|---------|--------|
+| `--type` | Documentation type | `inline`, `external`, `api`, `guide` |
+| `--style` | Documentation style | `brief`, `detailed` |
+| `--indexer` | Context-aware file indexing | Boolean |
+| `--changelog` | Changelog management | Boolean |
+
+### Implement Command Flags (`/sc:implement`)
+| Flag | Purpose | Values |
+|------|---------|--------|
+| `--type` | Implementation type | `component`, `api`, `service`, `feature` |
+| `--framework` | Framework context | `react`, `vue`, `express`, `flutter` |
+| `--safe` | Safety mode execution | Boolean |
+| `--with-tests` | Include test generation | Boolean |
+
+### Load Command Flags (`/sc:load`)
+| Flag | Purpose | Values |
+|------|---------|--------|
+| `--type` | Load target type | `project`, `config`, `deps`, `checkpoint` |
+| `--refresh` | Refresh existing context | Boolean |
+| `--analyze` | Analyze during load | Boolean |
+
+### Save Command Flags (`/sc:save`)
+| Flag | Purpose | Values |
+|------|---------|--------|
+| `--type` | Save scope | `session`, `learnings`, `context`, `all` |
+| `--summarize` | Create session summary | Boolean |
+| `--checkpoint` | Create recovery checkpoint | Boolean |
+| `--merge` | Merge with existing memory | Boolean |
+
 ## Advanced Control Flags
 
 ### Scope and Focus
@@ -183,34 +214,57 @@
 
 ### Frontend Development
 ```bash
-/sc:implement "responsive dashboard" --magic --c7
+/sc:implement "responsive dashboard" --type component --framework react --magic --c7
 /sc:design component-library --type component --format code
 /sc:test ui-components/ --magic --play
 /sc:improve legacy-ui/ --magic --morph --validate
+/sc:document components/ --type external --indexer
 ```
 
 ### Backend Development
 ```bash
 /sc:analyze api/ --focus performance --seq --think
 /sc:design payment-api --type api --format spec
+/sc:implement "user authentication" --type api --framework express --safe --with-tests
 /sc:troubleshoot "API timeout" --type performance --trace
 /sc:improve auth-service --type security --validate
+/sc:document api/ --type api --style detailed
 ```
 
 ### Large Projects
 ```bash
+/sc:load . --type project --analyze --refresh
 /sc:analyze . --ultrathink --all-mcp --safe-mode
 /sc:workflow enterprise-system --strategy enterprise --depth deep
 /sc:cleanup . --type all --safe --interactive
 /sc:estimate "migrate to microservices" --type complexity --breakdown
+/sc:save "enterprise migration analysis" --type all --checkpoint --merge
 ```
 
 ### Quality & Maintenance
 ```bash
 /sc:improve src/ --type quality --safe --interactive
 /sc:cleanup imports --type imports --preview
+/sc:document . --changelog
+/sc:document . --indexer
 /sc:reflect --type completion --validate
 /sc:git commit --smart-commit
+```
+
+### Session Management & Documentation
+```bash
+/sc:load "project-context" --type checkpoint --analyze
+/sc:implement "new feature" --type feature --safe --with-tests
+/sc:document feature/ --type guide --style detailed --indexer
+/sc:save "feature implementation" --type all --summarize --merge
+```
+
+### Flutter Development
+```bash
+/sc:load . --type project --refresh
+/sc:implement "user profile screen" --framework flutter --type component --safe
+/sc:document lib/features/ --type api --indexer
+/sc:save "flutter development session" --type session --checkpoint
 ```
 
 ## Flag Interactions
@@ -221,18 +275,27 @@
 - `--serena` + `--morph`: Project memory with transformations
 - `--safe-mode` + `--validate`: Maximum safety
 - `--loop` + `--validate`: Iterative improvement with validation
+- `--implement` + `--with-tests` + `--safe`: Comprehensive feature development
+- `--document` + `--indexer` + `--changelog`: Complete documentation workflow
+- `--save` + `--merge` + `--checkpoint`: Persistent session management
+- `--load` + `--analyze` + `--refresh`: Smart project initialization
 
 ### Conflicting Flags
 - `--all-mcp` vs individual MCP flags (use one or the other)
 - `--no-mcp` vs any MCP flags (--no-mcp wins)
 - `--safe` vs `--aggressive` (cleanup intensity)
 - `--quiet` vs `--verbose` (output level)
+- `--merge` vs `--overwrite` (save strategy - use one approach)
+- `--brief` vs `--detailed` (documentation style)
 
 ### Auto-Enabling Relationships
 - `--safe-mode` auto-enables `--uc` and `--validate`
 - `--ultrathink` auto-enables all MCP servers
 - `--think-hard` auto-enables `--seq` + `--c7`
 - `--magic` triggers UI-focused agents
+- `--implement` + `--framework flutter` auto-enables Flutter expert agent
+- `--save` + `--load` auto-enable Serena MCP for session persistence
+- `--document` + `--indexer` enables enhanced file analysis capabilities
 
 ## Troubleshooting Flags
 
