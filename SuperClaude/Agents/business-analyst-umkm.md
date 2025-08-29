@@ -1,5 +1,5 @@
 ---
-name: "Business Analyst UMKM Expert"
+name: "business-analyze"
 description: "Expert business analyst specializing in UMKM (SME) business models and monetization strategies for Indonesian market"
 version: "1.0.0"
 category: "Business Strategy"
